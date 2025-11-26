@@ -33,6 +33,43 @@ chrome.webRequest.onBeforeRequest.addListener(
   [] // No extra info needed for observation
 );
 
+// **NEW MESSAGE LISTENER BLOCK (MANDATORY FOR POPUP COMMUNICATION)**
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    
+    // Check if the message is the one requested by the popup.js
+    if (request.event === 'getMedia') {
+        
+        // Use Promise.all to fetch both media data and options data concurrently
+        Promise.all([
+            // 1. Fetch the last saved media URL
+            chrome.storage.local.get(['lastMediaUrl']),
+            // 2. Fetch the options/config data
+            chrome.storage.local.get(['config']) 
+        ])
+        .then(([mediaData, configData]) => {
+            
+            // Construct the exact object structure the old popup.js expects: {tab, media, opt}
+            const responseInfo = {
+                tab: request.tabId, // Use the tabId requested by the popup
+                media: mediaData.lastMediaUrl || 'N/A',
+                opt: configData.config || {} // Send the options data
+            };
+
+            // Send the response object back to the popup.js
+            sendResponse(responseInfo);
+        })
+        .catch(error => {
+            console.error("Error retrieving storage data:", error);
+            sendResponse({ tab: request.tabId, media: 'ERROR', opt: {} });
+        });
+        
+        // **IMPORTANT:** Must return true to indicate you will call sendResponse asynchronously.
+        return true; 
+    }
+
+    // Handle other messages if needed
+    return false;
+});
 
 // 2. **ACTION LISTENER (MV3 replacement for pageAction)**
 // This is triggered when the popup is clicked, which is a key part of the extension's function.
