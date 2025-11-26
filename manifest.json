@@ -15,11 +15,15 @@
       "32": "icon/icon32.png"
     },
     "default_popup": "popup.html",
-    "default_title": "Media Grabber"
-    "options_ui": {
+    "default_title": "Media Grabber"  <-- 🚨 COMMA IS REQUIRED HERE 🚨
+  },                               <-- 🚨 CLOSING BRACE FOR "action" 🚨
+  
+  // 🟢 THIS IS THE CORRECT LOCATION FOR options_ui 
+  "options_ui": {
     "page": "options.html",
     "open_in_tab": true
   },
+  
   "permissions": [
     "storage",
     "tabs",
