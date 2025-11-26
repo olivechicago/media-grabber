@@ -1,31 +1,38 @@
 {
-  "name": "Media Grabber",
-  "version": "1.2",
-  "description": "Get the media URL of a page's most recently played audio/video (and then do something with it).",
+  "manifest_version": 3,
+  "name": "Media Grabber (MV3)",
+  "version": "1.0.0",
+  "description": "Chrome extension to get the media URL of a page's most recently played audio/video.",
   "icons": {
+    "16": "icon/icon16.png",
     "48": "icon/icon48.png",
     "128": "icon/icon128.png"
   },
-  "background": {
-    "scripts": ["js/background.js"],
-    "persistent": true
+  "action": {
+    "default_icon": {
+      "16": "icon/icon16.png",
+      "24": "icon/icon24.png",
+      "32": "icon/icon32.png"
+    },
+    "default_popup": "popup.html",
+    "default_title": "Media Grabber",
   },
-  "page_action": {
-    "default_icon": "icon/icon.png",
-    "default_popup": "popup.html"
+  
+    "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
   },
+  
   "permissions": [
-    "webRequest",
-    "tabs",
     "storage",
-    "http://*/*",
-    "https://*/*",
+    "tabs",
+    "webRequest",
     "bookmarks"
   ],
-  "options_ui": {
-    "page": "options.html",
-    "chrome_style": true
-  },
-  "manifest_version": 2,
-  "content_security_policy": "script-src 'self' https://code.jquery.com; object-src 'self'"
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "js/background.js"
+  }
 }
